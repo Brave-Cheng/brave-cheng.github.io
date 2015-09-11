@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)</title>
+    <meta name="description" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+
+    <!-- Google Authorship Markup -->
+    <link rel="author" href="https://plus.google.com/+?rel=author">
+
+    <!-- Social: Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@bravecheng">
+    <meta name="twitter:title" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+    <meta name="twitter:description" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+    
+    <meta property="twitter:image:src" content="/assets/img/">
+    
+
+    <!-- Social: Facebook / Open Graph -->
+    <meta property="og:url" content="/Percona-XtraBackup/">
+    <meta property="og:title" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+    
+    <meta property="og:image" content="/assets/img/">
+    
+    <meta property="og:description" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+    <meta property="og:site_name" content="">
+
+    <!-- Social: Google+ / Schema.org  -->
+    <meta itemprop="name" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)"/>
+    <meta itemprop="description" content="阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)">
+    <meta itemprop="image" content="/assets/img/blog-image.png"/>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/assets/img/icons/favicon.ico" type="image/x-icon" />
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/assets/img/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/icons/apple-touch-icon-152x152.png" />
+    <!-- Windows 8 Tile Icons -->
+    <meta name="application-name" content="程会勇 Blog">
+    <meta name="msapplication-TileColor" content="#0562DC">
+    <meta name="msapplication-square70x70logo" content="smalltile.png" />
+    <meta name="msapplication-square150x150logo" content="mediumtile.png" />
+    <meta name="msapplication-wide310x150logo" content="widetile.png" />
+    <meta name="msapplication-square310x310logo" content="largetile.png" />
+    <!-- Android Lolipop Theme Color -->
+    <meta name="theme-color" content="#0562DC">
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="/Percona-XtraBackup/">
+    <link rel="alternate" type="application/rss+xml" title="" href="/feed.xml" />
+</head>
+
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" display="none" version="1.1"><defs><symbol id="icon-menu" viewBox="0 0 1024 1024"><path class="path1" d="M128 213.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5zM128 725.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5zM128 469.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5z"/></symbol><symbol id="icon-search" viewBox="0 0 951 1024"><path class="path1" d="M658.286 475.429q0-105.714-75.143-180.857t-180.857-75.143-180.857 75.143-75.143 180.857 75.143 180.857 180.857 75.143 180.857-75.143 75.143-180.857zM950.857 950.857q0 29.714-21.714 51.429t-51.429 21.714q-30.857 0-51.429-21.714l-196-195.429q-102.286 70.857-228 70.857-81.714 0-156.286-31.714t-128.571-85.714-85.714-128.571-31.714-156.286 31.714-156.286 85.714-128.571 128.571-85.714 156.286-31.714 156.286 31.714 128.571 85.714 85.714 128.571 31.714 156.286q0 125.714-70.857 228l196 196q21.143 21.143 21.143 51.429z"/></symbol><symbol id="icon-email" viewBox="0 0 1024 1024"><path class="path1" d="M950.857 859.429v-438.857q-18.286 20.571-39.429 37.714-153.143 117.714-243.429 193.143-29.143 24.571-47.429 38.286t-49.429 27.714-58.571 14h-1.143q-27.429 0-58.571-14t-49.429-27.714-47.429-38.286q-90.286-75.429-243.429-193.143-21.143-17.143-39.429-37.714v438.857q0 7.429 5.429 12.857t12.857 5.429h841.143q7.429 0 12.857-5.429t5.429-12.857zM950.857 258.857v-14t-0.286-7.429-1.714-7.143-3.143-5.143-5.143-4.286-8-1.429h-841.143q-7.429 0-12.857 5.429t-5.429 12.857q0 96 84 162.286 110.286 86.857 229.143 181.143 3.429 2.857 20 16.857t26.286 21.429 25.429 18 28.857 15.714 24.571 5.143h1.143q11.429 0 24.571-5.143t28.857-15.714 25.429-18 26.286-21.429 20-16.857q118.857-94.286 229.143-181.143 30.857-24.571 57.429-66t26.571-75.143zM1024 237.714v621.714q0 37.714-26.857 64.571t-64.571 26.857h-841.143q-37.714 0-64.571-26.857t-26.857-64.571v-621.714q0-37.714 26.857-64.571t64.571-26.857h841.143q37.714 0 64.571 26.857t26.857 64.571z"/></symbol><symbol id="icon-close" viewBox="0 0 805 1024"><path class="path1" d="M741.714 755.429q0 22.857-16 38.857l-77.714 77.714q-16 16-38.857 16t-38.857-16l-168-168-168 168q-16 16-38.857 16t-38.857-16l-77.714-77.714q-16-16-16-38.857t16-38.857l168-168-168-168q-16-16-16-38.857t16-38.857l77.714-77.714q16-16 38.857-16t38.857 16l168 168 168-168q16-16 38.857-16t38.857 16l77.714 77.714q16 16 16 38.857t-16 38.857l-168 168 168 168q16 16 16 38.857z"/></symbol><symbol id="icon-twitter" viewBox="0 0 951 1024"><path class="path1" d="M925.714 233.143q-38.286 56-92.571 95.429 0.571 8 0.571 24 0 74.286-21.714 148.286t-66 142-105.429 120.286-147.429 83.429-184.571 31.143q-154.857 0-283.429-82.857 20 2.286 44.571 2.286 128.571 0 229.143-78.857-60-1.143-107.429-36.857t-65.143-91.143q18.857 2.857 34.857 2.857 24.571 0 48.571-6.286-64-13.143-106-63.714t-42-117.429v-2.286q38.857 21.714 83.429 23.429-37.714-25.143-60-65.714t-22.286-88q0-50.286 25.143-93.143 69.143 85.143 168.286 136.286t212.286 56.857q-4.571-21.714-4.571-42.286 0-76.571 54-130.571t130.571-54q80 0 134.857 58.286 62.286-12 117.143-44.571-21.143 65.714-81.143 101.714 53.143-5.714 106.286-28.571z"/></symbol><symbol id="icon-facebook" viewBox="0 0 585 1024"><path class="path1" d="M548 6.857v150.857h-89.714q-49.143 0-66.286 20.571t-17.143 61.714v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571q0-106.286 59.429-164.857t158.286-58.571q84 0 130.286 6.857z"/></symbol><symbol id="icon-rss" viewBox="0 0 805 1024"><path class="path1" d="M219.429 768q0 45.714-32 77.714t-77.714 32-77.714-32-32-77.714 32-77.714 77.714-32 77.714 32 32 77.714zM512 838.286q1.143 16-9.714 27.429-10.286 12-26.857 12h-77.143q-14.286 0-24.571-9.429t-11.429-23.714q-12.571-130.857-105.429-223.714t-223.714-105.429q-14.286-1.143-23.714-11.429t-9.429-24.571v-77.143q0-16.571 12-26.857 9.714-9.714 24.571-9.714h2.857q91.429 7.429 174.857 46t148 103.714q65.143 64.571 103.714 148t46 174.857zM804.571 839.429q1.143 15.429-10.286 26.857-10.286 11.429-26.286 11.429h-81.714q-14.857 0-25.429-10t-11.143-24.286q-6.857-122.857-57.714-233.429t-132.286-192-192-132.286-233.429-58.286q-14.286-0.571-24.286-11.143t-10-24.857v-81.714q0-16 11.429-26.286 10.286-10.286 25.143-10.286h1.714q149.714 7.429 286.571 68.571t243.143 168q106.857 106.286 168 243.143t68.571 286.571z"/></symbol><symbol id="icon-google-plus" viewBox="0 0 951 1024"><path class="path1" d="M420 454.857q0 20.571 18.286 40.286t44.286 38.857 51.714 42 44 59.429 18.286 81.143q0 51.429-27.429 98.857-41.143 69.714-120.571 102.571t-170.286 32.857q-75.429 0-140.857-23.714t-98-78.571q-21.143-34.286-21.143-74.857 0-46.286 25.429-85.714t67.714-65.714q74.857-46.857 230.857-57.143-18.286-24-27.143-42.286t-8.857-41.714q0-20.571 12-48.571-26.286 2.286-38.857 2.286-84.571 0-142.571-55.143t-58-139.714q0-46.857 20.571-90.857t56.571-74.857q44-37.714 104.286-56t124.286-18.286h238.857l-78.857 50.286h-74.857q42.286 36 64 76t21.714 91.429q0 41.143-14 74t-33.714 53.143-39.714 37.143-34 35.143-14 37.714zM336.571 400q21.714 0 44.571-9.429t37.714-24.857q30.286-32.571 30.286-90.857 0-33.143-9.714-71.429t-27.714-74-48.286-59.143-66.857-23.429q-24 0-47.143 11.143t-37.429 30q-26.857 33.714-26.857 91.429 0 26.286 5.714 55.714t18 58.857 29.714 52.857 42.857 38.286 55.143 14.857zM337.714 898.857q33.143 0 63.714-7.429t56.571-22.286 41.714-41.714 15.714-62.286q0-14.286-4-28t-8.286-24-15.429-23.714-16.857-20-22-19.714-20.857-16.571-23.714-17.143-20.857-14.857q-9.143-1.143-27.429-1.143-30.286 0-60 4t-61.429 14.286-55.429 26.286-39.143 42.571-15.429 60.286q0 40 20 70.571t52.286 47.429 68 25.143 72.857 8.286zM800.571 398.286h121.714v61.714h-121.714v125.143h-60v-125.143h-121.143v-61.714h121.143v-124h60v124z"/></symbol><symbol id="icon-angle-down" viewBox="0 0 658 1024"><path class="path1" d="M614.286 420.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-266.286-266.286q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l224.571 224.571 224.571-224.571q5.714-5.714 13.143-5.714t13.143 5.714l28.571 28.571q5.714 5.714 5.714 13.143z"/></symbol><symbol id="icon-github-alt" viewBox="0 0 951 1024"><path class="path1" d="M365.714 694.857q0 22.857-7.143 46.857t-24.571 43.429-41.429 19.429-41.429-19.429-24.571-43.429-7.143-46.857 7.143-46.857 24.571-43.429 41.429-19.429 41.429 19.429 24.571 43.429 7.143 46.857zM731.429 694.857q0 22.857-7.143 46.857t-24.571 43.429-41.429 19.429-41.429-19.429-24.571-43.429-7.143-46.857 7.143-46.857 24.571-43.429 41.429-19.429 41.429 19.429 24.571 43.429 7.143 46.857zM822.857 694.857q0-68.571-39.429-116.571t-106.857-48q-23.429 0-111.429 12-40.571 6.286-89.714 6.286t-89.714-6.286q-86.857-12-111.429-12-67.429 0-106.857 48t-39.429 116.571q0 50.286 18.286 87.714t46.286 58.857 69.714 34.286 80 16.857 85.143 4h96q46.857 0 85.143-4t80-16.857 69.714-34.286 46.286-58.857 18.286-87.714zM950.857 594.286q0 118.286-34.857 189.143-21.714 44-60.286 76t-80.571 49.143-97.143 27.143-98 12.571-95.429 2.571q-44.571 0-81.143-1.714t-84.286-7.143-87.143-17.143-78.286-29.429-69.143-46.286-49.143-65.714q-35.429-70.286-35.429-189.143 0-135.429 77.714-226.286-15.429-46.857-15.429-97.143 0-66.286 29.143-124.571 61.714 0 108.571 22.571t108 70.571q84-20 176.571-20 84.571 0 160 18.286 60-46.857 106.857-69.143t108-22.286q29.143 58.286 29.143 124.571 0 49.714-15.429 96 77.714 91.429 77.714 227.429z"/></symbol></defs></svg>
+
+        <header class="header-post" role="banner">
+    <div class="content">
+        
+            <time itemprop="datePublished" datetime="2015-08-12 00:00:00 +0800" class="date">12 Aug 2015</time>
+        
+        <h1 class="post-title" itemprop="name">阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)</h1>
+        <p itemprop="description" class="subtitle">阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)</p>
+    </div>
+     <a class="down" data-scroll href="#scroll"><svg class="icon icon-angle-down"><use xlink:href="#icon-angle-down"></use></svg></a>
+     <div class="search-wrapper">
+    <div class="search-form">
+        <input type="text" class="search-field" placeholder="Search...">
+        <svg class="icon-remove-sign"><use xlink:href="#icon-close"></use></svg>
+        <ul class="search-results search-list"></ul>
+    </div>
+</div>
+
+<div id="fade" class="overlay"></div>
+<a id="slide" class="slideButton fade">
+    <svg id="open" class="icon-menu"><use xlink:href="#icon-menu"></use></svg>
+    <svg id="close" class="icon-menu"><use xlink:href="#icon-close"></use></svg>
+</a>
+<aside id="sidebar">
+<nav id="navigation">
+  <h2>MENU</h2>
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/series">Series</a></li>
+    
+      <li><a href="/tags">Tags</a></li>
+    
+      <li><a href="/about">About Me</a></li>
+    
+    <li><a class="feed" href="/feed.xml" title="Atom/RSS feed">Feed</a></li>
+  </ul>
+</nav>
+</aside>
+<a id="search" class="dosearch">
+    <svg class="icon-menu icon-search"><use xlink:href="#icon-search"></use></svg>
+</a>
+</header>
+
+        <section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+            <article role="article" id="scroll" class="post-content" itemprop="articleBody">
+                <blockquote>
+  <p>随着业务变化与时间的推移，我们租用在阿里云的RDS数据也不断增长。阿里云提供了非常稳定而高效的数据备份机制（备份一次仅仅耗时1s）。数据却是备份了，但是恢复却耗费了精力，今天专门针对阿里云官方提供的帮助文档 - <a href="http://help.aliyun.com/knowledge_detail/5973700.html?spm=5176.788314901.3.1.cJEBu8">DS备份文件恢复到自建数据库</a>进行实际操作与研究，虽然结果是美好的，但是这中间的过程却坡坡坎坎、“委婉而曲折”。下面总结下自己实际的操作过程与心得，以为遇到类似问题的同伴提供一些有效的帮助。</p>
+</blockquote>
+
+<h2 id="section">环境与工具</h2>
+
+<ul>
+  <li>操作系统： OS X 10.10.4</li>
+  <li>服务器环境：CentOS 6.5</li>
+  <li>终端工具：iTerm (Mac)</li>
+  <li>数据压缩解压工具：rds_backup_extract （仅仅适用RDS）</li>
+  <li>数据库恢复工具：Percona XtraBackup 2.2 Release 2.2.12</li>
+  <li>本地数据库环境：Server version: 5.6.21-log MySQL Community Server (GPL)</li>
+  <li>生产数据库环境：MySQL5.5</li>
+</ul>
+
+<h2 id="section-1">操作过程</h2>
+
+<blockquote>
+  <p>备份文件请按照文档中给出的流程操作</p>
+</blockquote>
+
+<h3 id="rdsrdsbackupextract">1、下载RDS官方提供的压缩工具包rds_backup_extract</h3>
+
+<p>按照它提供的官方文档 <a href="http://help.aliyun.com/knowledge_detail/5973700.html?spm=5176.788314901.3.1.cJEBu8">RDS备份文件恢复到自建数据库</a>，直接下载文中提到的地址即可：有个警告提示就是，不要在终端中直接wget该地址(<a href="http://help.aliyun.com/knowledge_detail.htm?spm=5176.7114037.1996646101.7.pdWF0v&amp;categoryId=8314909&amp;knowledgeId=6510006&amp;pos=4">wget注意</a>)。我尝试了很久都没有能下载到本地。</p>
+
+<h3 id="percona-xtrabackup-22">2、安装备份还原工具Percona XtraBackup 2.2</h3>
+
+<p>官方文档中提供的版本是2.2.9，不过我是用的最新版本2.2.12 (强迫症)。不要去搜索网上很多安装资料，如果中文的，英文的，baidu的, google的。直接在官方下载<a href="https://www.percona.com/downloads/XtraBackup/LATEST/">Percona XtraBackup</a>安装，官方也提供了安装指南（https://www.percona.com/doc/percona-xtrabackup/2.2/installation/yum_repo.html）。我也搜索了很多安装信息，但是大多版本，系统环境不一致，所以小心坑。</p>
+
+<h3 id="section-2">3、 根据帮助文档解压备份文件</h3>
+<p>文档中给出的命令是这个</p>
+
+<p><code>sh rds_backup_extract -f /home/mysql/backup/hins575175_xtra_20150429091224.tar.gz -C /home/mysql/data
+</code></p>
+
+<p>实际操作时，可能环境不同，操作的命令和方式不同。我实际操作的命令是</p>
+
+<p><code>
+sh rds_backup_extract.sh -f /alidata/www/databases_backups/hins651261_xtra_20150814021723.tar.gz -C /alidata/www/databases_backups/20150814
+</code></p>
+
+<h3 id="section-3">4、还原备份文件</h3>
+
+<p>心酸的要来了，文中提到的一个还原命令</p>
+
+<p><code>innobackupex --defaults-file=/home/mysql/data/backup-my.cnf --apply-log /home/mysql/data
+</code></p>
+
+<p>却让我摸不着头脑啊。我执行了命令，一直报错：</p>
+
+<p>[vagrant@localhost ~]$ sudo innobackupex –defaults-file=/alidata/www/databases_backups/20150814/backup-my.cnf –apply-log /alidata/www/databases_backups/20150814/</p>
+
+<p>InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.</p>
+
+<p>This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.</p>
+
+<p>Get the latest version of Percona XtraBackup, documentation, and help resources:
+http://www.percona.com/xb/p</p>
+
+<p>150814 08:55:39  innobackupex: Starting the apply-log operation</p>
+
+<p>IMPORTANT: Please check that the apply-log run completes successfully.
+           At the end of a successful apply-log run innobackupex
+           prints “completed OK!”.</p>
+
+<p>Warning: World-writable config file ‘/alidata/www/databases_backups/20150814/backup-my.cnf’ is ignored
+innobackupex: got a fatal error with the following stacktrace: at /usr/bin/innobackupex line 4545
+    main::get_option(‘innodb_data_file_path’) called at /usr/bin/innobackupex line 2631
+    main::apply_log() called at /usr/bin/innobackupex line 1578
+innobackupex: Error: no ‘innodb_data_file_path’ option in group ‘mysqld’ in server configuration file ‘/alidata/www/databases_backups/20150814/backup-my.cnf’ at /usr/bin/innobackupex line 4545.</p>
+
+<p>[vagrant@localhost ~]$</p>
+
+<p>Google了很多资源，大多看不懂也不太明白，于是发了个<a href="http://segmentfault.com/q/1010000003096058">Segment问题:Percona XtraBackup 数据库备份工具使用问题</a>，基本上是无人问津。</p>
+
+<p>然后又继续搜索Percona工具的相关问题，整理了一些<a href="https://github.com/Brave-Cheng/Materials/blob/master/%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%A2%B3%E7%90%86%28Online%29/Mysql%E5%A4%87%E4%BB%BD.md">有用的在Github中</a>。</p>
+
+<p>上面的问题还是一直缠绕着我，之前我也做过类似的操作，也遇到了这个问题。云里雾里的时候，我仔细对比了上面的一些资料，发现backup-my.conf有些端倪，有的文档中用的是mysql安装目录中的my.conf文件，<img src="/assets/img/rds/1439548648031.png" alt="Alt text" /></p>
+
+<p>对比这段内容后，我好像明白了点什么。其实原理就是图片的那句“2.2备份恢复”</p>
+
+<p><code>
+innobackupex --defaults-file 这里应该是mysql的my.conf的路径 --copy-back 后面就是备份的路径
+</code></p>
+
+<p><strong>这个推测与阿里云帮助文档中的命令确实有些差异咯</strong>。我心想反正之前两此都不成功了，何不按照这样的理解是试试呢？在CentOS中查找mysql运行目录<code>ps -ef | grep mysql</code>；将mysql数据目录备份<code>mv data data_backup</code>；做了一些辅助工作后，带着试一试的想法开始实施。</p>
+
+<p>按照我猜想的命令执行后，报了”…no datadir option …“字样的错误。然后又搜素到了<a href="http://blog.csdn.net/mchdba/article/details/12970991">这篇文章</a>。于是继续修改，将系统的my.conf文件进行修改，打开了datadir选项。最后执行，还原命令终于执行了。</p>
+
+<h3 id="section-4">5、各类环境配置</h3>
+
+<p>看到complete ok字样后，感觉终于对了样，实际却不然。<code>innobackupex</code>将文件还原后，需要进一步做配置（我的环境）：
++ mysql启动报错:<code>mysql Starting MySQL..The server quit without updating PID file</code>，可能会修改还原datadir配置，也可能需要给data目录分配权限（chmod &amp; chown）
++ mysql连接本地不成功: 还原数据后，使用mysql root密码为空，试了很久，发现官方也是这么干的！
++ phpmyadmin/navicat等工具连接不上：这时需要设置mysql数据表的host字段为%（这里也有一些坑，比如多个root账号）。</p>
+
+<h3 id="section-5">我的执行过程如下：</h3>
+
+<p>$sudo innobackupex –defaults-file=/alidata/server/mysql/my.cnf –copy-back /alidata/www/databases_backups/20150815/</p>
+
+<p>//回车后，继续报错
+nnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy
+and Percona LLC and/or its affiliates 2009-2013.  All Rights Reserved.</p>
+
+<p>This software is published under
+the GNU GENERAL PUBLIC LICENSE Version 2, June 1991.</p>
+
+<p>Get the latest version of Percona XtraBackup, documentation, and help resources:
+http://www.percona.com/xb/p</p>
+
+<p>150815 03:02:54  innobackupex: Starting the copy-back operation</p>
+
+<p>IMPORTANT: Please check that the copy-back run completes successfully.
+           At the end of a successful copy-back run innobackupex
+           prints “completed OK!”.</p>
+
+<p>innobackupex: got a fatal error with the following stacktrace: at /usr/bin/innobackupex line 4545
+    main::get_option(‘datadir’) called at /usr/bin/innobackupex line 2450
+    main::copy_back(0) called at /usr/bin/innobackupex line 1578
+innobackupex: Error: no ‘datadir’ option in group ‘mysqld’ in server configuration file ‘/alidata/server/mysql/my.cnf’ at /usr/bin/innobackupex line 4545.</p>
+
+<p><img src="/assets/img/rds/1439608667788.png" alt="Alt text" /></p>
+
+<p><em>执行成功之后</em></p>
+
+<p><img src="/assets/img/rds/1439608777022.png" alt="Alt text" /></p>
+
+<p><em>将datadir注释</em>
+<img src="/assets/img/rds/1439608805040.png" alt="Alt text" /></p>
+
+<p><em>启动mysql报错</em></p>
+
+<p><img src="/assets/img/rds/1439608884381.png" alt="Alt text" /></p>
+
+<p><em>修改目录权限</em>
+<img src="/assets/img/rds/1439609006966.png" alt="Alt text" /></p>
+
+<p><em>再次启动成功</em>
+<img src="/assets/img/rds/1439609036323.png" alt="Alt text" /></p>
+
+<p><em>无需密码登陆</em>
+<img src="/assets/img/rds/1439609499092.png" alt="Alt text" /></p>
+
+<p><em>phpmyadmin连接不上</em>
+<img src="/assets/img/rds/1439609469462.png" alt="Alt text" /></p>
+
+<p><em>设置root密码</em>
+<img src="/assets/img/rds/1439609640148.png" alt="Alt text" /></p>
+
+<p><em>phpmyadmin登陆成功</em>
+<img src="/assets/img/rds/1439609707349.png" alt="Alt text" /></p>
+
+<p><em>mysqlworkbench 登陆不成功</em>
+<img src="/assets/img/rds/1439609695256.png" alt="Alt text" /></p>
+
+<p><em>继续设置root的host配置 - 连接成功</em>
+<img src="/assets/img/rds/1439610272916.png" alt="Alt text" /></p>
+
+<p>最后，总结一下，当我们在遇到问题时，千万别因为它陌生，看不懂就抛开了。反而是我们要善于在过程中发现细节，总结归纳，有效试错，这样收获会更多！</p>
+
+<h3 id="section-6">参考资料整理</h3>
+
+<ol>
+  <li><a href="http://www.111cn.net/database/mysql/47258.htm">http://www.111cn.net/database/mysql/47258.htm</a></li>
+  <li><a href="http://blog.csdn.net/mchdba/article/details/12970991">http://blog.csdn.net/mchdba/article/details/12970991</a></li>
+  <li><a href="http://segmentfault.com/q/1010000003096058">http://segmentfault.com/q/1010000003096058</a></li>
+  <li><a href="https://github.com/Brave-Cheng/Materials/blob/master/%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%A2%B3%E7%90%86(Online)/Mysql%E5%A4%87%E4%BB%BD.md">https://github.com/Brave-Cheng/Materials/blob/master/%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E6%A2%B3%E7%90%86(Online)/Mysql%E5%A4%87%E4%BB%BD.md</a></li>
+  <li><a href="http://www.drupal001.com/2014/02/percona-xtrabackup-mysql/">http://www.drupal001.com/2014/02/percona-xtrabackup-mysql/</a></li>
+  <li><a href="http://ju.outofmemory.cn/entry/189507">http://ju.outofmemory.cn/entry/189507</a></li>
+</ol>
+
+            </article>
+
+            <section class="share">
+    <h3>Share</h3>
+    <a aria-label="Share on Twitter" href="https://twitter.com/intent/tweet?text=&quot;阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)&quot;%20/Percona-XtraBackup/%20via%20&#64;bravecheng&hashtags=RDS,Percona XtraBackup,"
+    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title="Share on Twitter">
+        <svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg>
+    </a>
+    <a aria-label="Share on Facebook"href="https://www.facebook.com/sharer/sharer.php?u=/Percona-XtraBackup/"
+    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title="Share on Facebook">
+        <svg class="icon icon-facebook"><use xlink:href="#icon-facebook"></use></svg>
+    </a>
+    <a aria-label="Share on Google Plus" href="https://plus.google.com/share?url=/Percona-XtraBackup/"
+    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title="Share on Google+">
+        <svg class="icon icon-google-plus"><use xlink:href="#icon-google-plus"></use></svg>
+    </a>
+</section>
+            <section class="author" itemprop="author">
+    <div class="details" itemscope itemtype="http://schema.org/Person">
+        <img itemprop="image" class="img-rounded" src="/assets/img/blog-author.jpg" alt="">
+        <p class="def">Author</p>
+        <h3 class="name">
+            <a itemprop="name" href="https://plus.google.com/+/posts">程会勇</a>
+        </h3>
+        <p class="desc">程会勇的个人博客，专注互联网工具，产品</p>
+        <a itemprop="email" class="email" href="mailto:chenghuiyong1987@gmail.com">chenghuiyong1987@gmail.com</a>
+    </div>
+</section>
+
+            <section class="comments">
+    <h3>Comments</h3>
+    <div id="disqus_thread"></div>
+</section>
+<script type="text/javascript">
+    var disqus_loaded = false;
+
+    function load_disqus()
+    {
+        disqus_loaded = true;
+        var disqus_shortname = '';
+        var disqus_title = '阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)';
+        var disqus_url = '/Percona-XtraBackup/';
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        var ldr = document.getElementById('disqus_loader');
+    };
+    window.onscroll = function(e) {
+        if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 800)) {
+            //hit bottom of page
+            if (disqus_loaded==false)
+                load_disqus()
+        }
+    };
+</script>
+            <footer>
+    <p>by <a href="http://chenghuiyong.com">Brave Cheng</a></p>
+</footer>
+<script src="/assets/js/main.js"></script>
+        </section>
+    </body>
+</html>

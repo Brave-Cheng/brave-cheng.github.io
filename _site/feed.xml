@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>程会勇的个人博客，专注互联网工具，产品</description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 11 Sep 2015 17:07:15 +0800</pubDate>
+    <lastBuildDate>Fri, 11 Sep 2015 17:07:15 +0800</lastBuildDate>
+    <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>CentOS配置Memcache应用层缓存</title>
+        <description>&lt;blockquote&gt; &lt;p&gt;当功能代码逻辑开发完成后，你会尝试完善数据库设计，SQL查询优化，重构代码寻求高效的计算结果，通过不同的优化手段来提升HTTP响应请求时间，比如，合并CSS，压缩JS，图片压缩等前端优化手段，从运维架构方面，可以先做CDN缓存，将你的代码部署到离用户最近的机房，以提高用户响应时间，服务端部署反向代理，作分布式缓存，提升服务性能，也可以加快应用访问时间。&lt;/p&gt; &lt;/blockquote&gt; &lt;blockquote&gt; &lt;p&gt;我们现在的产品业务范围比较小，功能也不多，在功能代码开发完成后，在代码层面优化比较好的前提下，产品还是会遇到访问速度慢等性能问题。在硬件与带宽配置未升级时，针对我们的性能问题，暂使用缓存解决HTTP响应时间长问题，而缓存方面，我们选择了Memcache。&lt;/p&gt; &lt;/blockquote&gt; &lt;p&gt;配置环境与附属包&lt;/p&gt; &lt;ul&gt; &lt;li&gt;CentOS6.3&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;http://libevent.org/&quot;&gt;libevent2.0.22&lt;/a&gt; &lt;/li&gt; &lt;li&gt;&lt;a href=&quot;http://memcached.org/&quot;&gt;Memcached&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;http://pecl.php.net/package/memcache&quot;&gt;memcached extension&lt;/a&gt;&lt;/li&gt; &lt;/ul&gt; &lt;h2 id=&quot;section&quot;&gt;下载需要的软件包&lt;/h2&gt; &lt;p&gt;服务器安装Memcache缓存系统服务，需要下载上面的三个安装包，在Linux中可以直接wget url 下载。附上我的下载&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/下载libevent.png&quot; alt=&quot;Alt text&quot; /&gt; Libevent下载&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/C95FFE56-6F70-4143-B637-550B60D81AF4.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;Memcached下载&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/安装memcache php 扩展.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;php-memcache扩展下载&lt;/p&gt; &lt;h2 id=&quot;section-1&quot;&gt;开始编译安装软件&lt;/h2&gt; &lt;h3 id=&quot;libevent&quot;&gt;编译安装Libevent&lt;/h3&gt; &lt;blockquote&gt; &lt;ul&gt; &lt;li&gt;tar xzvf libevent-2.0.22-stable.tar.gz #解压包&lt;/li&gt; &lt;li&gt;cd libevent-2.0.22-stable #进入到解压的目录&lt;/li&gt; &lt;li&gt;/assets/img/memcache/configure –prefix=/usr &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install #编译前配置，生成Makefile文件，路径可自行更改&lt;/li&gt; &lt;/ul&gt; &lt;/blockquote&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/编译libevent.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;编译完成后，查看包是否存在&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/查看libevent是否安装.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;h3 id=&quot;memcached&quot;&gt;编译安装memcached服务器软件&lt;/h3&gt; &lt;blockquote&gt; &lt;ul&gt; &lt;li&gt;tar xzvf memcached-1.4.24.tar.gz #解压包&lt;/li&gt; &lt;li&gt;cd memcached-1.4.24 #进入到解压的目录&lt;/li&gt; &lt;li&gt;/assets/img/memcache/configure –with-libevent=/usr &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install #编译前配置，生成Makefile文件，路径必须与libevent中一致&lt;/li&gt; &lt;/ul&gt; &lt;/blockquote&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/memcache/编译memcache.png&quot;...</description>
+        <pubDate>Fri, 11 Sep 2015 00:00:00 +0800</pubDate>
+        <link>/Centos-memcache/</link>
+        <guid isPermaLink="true">/Centos-memcache/</guid>
+        
+        <category>CentOS</category>
+        
+        <category>Memcache</category>
+        
+        <category>应用缓存</category>
+        
+        
+        <category>memcache</category>
+        
+      </item>
+    
+      <item>
+        <title>安装Git服务&amp;使用Gitosis管理成员、项目并做项目授权</title>
+        <description>&lt;blockquote&gt; &lt;p&gt;这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖。&lt;/p&gt; &lt;/blockquote&gt; &lt;h1 id=&quot;section&quot;&gt;弄清楚关键词眼与概念&lt;/h1&gt; &lt;p&gt;&lt;strong&gt;&lt;em&gt;裸仓库（bare repository）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt; &lt;blockquote&gt; &lt;p&gt;即一个没有当前工作目录的仓库。因为该仓库只是一个合作媒介，所以不需要从硬盘上取出最新版本的快照；仓库里存放的仅仅是 Git 的数据。简单地说，裸仓库就是你工作目录中 .git 子目录内的内容。&lt;/p&gt; &lt;/blockquote&gt; &lt;p&gt;补充一下：直接上图，简单明了。&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/裸仓库.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;&lt;strong&gt;&lt;em&gt;远程仓库&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt; &lt;blockquote&gt; &lt;p&gt;远程仓库通常只是一个裸仓库（bare repository） &lt;/p&gt; &lt;/blockquote&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/本地目录与仓库-2.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/暂存区原理.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;在 Git 内都只有三种状态：已提交（committed），已修改（modified）和已暂存（staged）。已提交表示该文件已经被安全地保存在本地仓库了；已修改表示修改了某个文件，但还没有提交保存；已暂存表示把已修改的文件放在下次提交时要保存的清单中。 结合实际的工作项目，来解释下以下概念。&lt;/p&gt; &lt;p&gt;&lt;strong&gt;&lt;em&gt;Git 工作目录&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;就是下图中的除了.git目录的其他的文件与目录。&lt;/p&gt; &lt;p&gt;&lt;strong&gt;&lt;em&gt;暂存区域&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;就是实际操作时，使用git add 命令将新增（修改）的文件添加到一个控制区域的清单。&lt;/p&gt; &lt;p&gt;&lt;strong&gt;本地仓库&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;就是下图中的.git目录的其他的文件与目录。&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/本地目录与仓库.png&quot; alt=&quot;图三&quot; /&gt; &lt;/p&gt; &lt;h1 id=&quot;git&quot;&gt;Git安装&lt;/h1&gt; &lt;p&gt;以我的一台CentOS为例，做下实际安装过程。 &lt;img src=&quot;/assets/img/gitosis/本地环境.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;安装git主要分为两种，一种是通过编译源代码来安装；另一种是使用为特定平台预编译好的安装包。我选择第二种咯。第一种安装方式&lt;a href=&quot;http://git.oschina.net/progit/1-%E8%B5%B7%E6%AD%A5.html#1.4-%E5%AE%89%E8%A3%85-Git&quot;&gt;参考这里&lt;/a&gt;&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/特定平台预编译好的安装包.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/安装结束.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;h1 id=&quot;gitosisgit&quot;&gt;Gitosis管理git用户与授权&lt;/h1&gt; &lt;p&gt;如果你的项目是多人开发，建议就使用Gitosis进行人员添加与项目授权。安装Gitosis网上资料比比皆是，我自己也踩过很多坑。但是我建议是先看看网上的资料，最后仔细阅读&lt;a href=&quot;https://github.com/res0nat0r/gitosis&quot;&gt;gitosis&lt;/a&gt;在Github上面的安装流程，下面结合自己的搜索阅读与安装经历，一步一步记录我的安装过程。&lt;/p&gt; &lt;h3 id=&quot;gitosis--python--python--setuptools-&quot;&gt;1、Gitosis 的工作依赖于某些 Python 工具，所以首先要安装 Python 的 setuptools 包&lt;/h3&gt; &lt;p&gt;&lt;img src=&quot;/assets/img/gitosis/python-setuptools.png&quot; alt=&quot;Alt text&quot; /&gt;&lt;/p&gt; &lt;h3 id=&quot;gitosis-&quot;&gt;2、从 Gitosis 项目主页克隆并安装&lt;/h3&gt; &lt;p&gt;有可能你clone不成功，报socket连接失败 &lt;img src=&quot;/assets/img/gitosis/1440148225122.png&quot; alt=&quot;Alt...</description>
+        <pubDate>Tue, 25 Aug 2015 00:00:00 +0800</pubDate>
+        <link>/gitosis/</link>
+        <guid isPermaLink="true">/gitosis/</guid>
+        
+        <category>Git</category>
+        
+        <category>Gitosis</category>
+        
+        
+        <category>gitosis</category>
+        
+      </item>
+    
+      <item>
+        <title>阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)</title>
+        <description>&lt;blockquote&gt; &lt;p&gt;随着业务变化与时间的推移，我们租用在阿里云的RDS数据也不断增长。阿里云提供了非常稳定而高效的数据备份机制（备份一次仅仅耗时1s）。数据却是备份了，但是恢复却耗费了精力，今天专门针对阿里云官方提供的帮助文档 - &lt;a href=&quot;http://help.aliyun.com/knowledge_detail/5973700.html?spm=5176.788314901.3.1.cJEBu8&quot;&gt;DS备份文件恢复到自建数据库&lt;/a&gt;进行实际操作与研究，虽然结果是美好的，但是这中间的过程却坡坡坎坎、“委婉而曲折”。下面总结下自己实际的操作过程与心得，以为遇到类似问题的同伴提供一些有效的帮助。&lt;/p&gt; &lt;/blockquote&gt; &lt;h2 id=&quot;section&quot;&gt;环境与工具&lt;/h2&gt; &lt;ul&gt; &lt;li&gt;操作系统： OS X 10.10.4&lt;/li&gt; &lt;li&gt;服务器环境：CentOS 6.5&lt;/li&gt; &lt;li&gt;终端工具：iTerm (Mac)&lt;/li&gt; &lt;li&gt;数据压缩解压工具：rds_backup_extract （仅仅适用RDS）&lt;/li&gt; &lt;li&gt;数据库恢复工具：Percona XtraBackup 2.2 Release 2.2.12&lt;/li&gt; &lt;li&gt;本地数据库环境：Server version: 5.6.21-log MySQL Community Server (GPL)&lt;/li&gt; &lt;li&gt;生产数据库环境：MySQL5.5&lt;/li&gt; &lt;/ul&gt; &lt;h2 id=&quot;section-1&quot;&gt;操作过程&lt;/h2&gt; &lt;blockquote&gt; &lt;p&gt;备份文件请按照文档中给出的流程操作&lt;/p&gt; &lt;/blockquote&gt; &lt;h3 id=&quot;rdsrdsbackupextract&quot;&gt;1、下载RDS官方提供的压缩工具包rds_backup_extract&lt;/h3&gt; &lt;p&gt;按照它提供的官方文档 &lt;a href=&quot;http://help.aliyun.com/knowledge_detail/5973700.html?spm=5176.788314901.3.1.cJEBu8&quot;&gt;RDS备份文件恢复到自建数据库&lt;/a&gt;，直接下载文中提到的地址即可：有个警告提示就是，不要在终端中直接wget该地址(&lt;a href=&quot;http://help.aliyun.com/knowledge_detail.htm?spm=5176.7114037.1996646101.7.pdWF0v&amp;amp;categoryId=8314909&amp;amp;knowledgeId=6510006&amp;amp;pos=4&quot;&gt;wget注意&lt;/a&gt;)。我尝试了很久都没有能下载到本地。&lt;/p&gt; &lt;h3 id=&quot;percona-xtrabackup-22&quot;&gt;2、安装备份还原工具Percona XtraBackup 2.2&lt;/h3&gt; &lt;p&gt;官方文档中提供的版本是2.2.9，不过我是用的最新版本2.2.12 (强迫症)。不要去搜索网上很多安装资料，如果中文的，英文的，baidu的, google的。直接在官方下载&lt;a href=&quot;https://www.percona.com/downloads/XtraBackup/LATEST/&quot;&gt;Percona XtraBackup&lt;/a&gt;安装，官方也提供了安装指南（https://www.percona.com/doc/percona-xtrabackup/2.2/installation/yum_repo.html）。我也搜索了很多安装信息，但是大多版本，系统环境不一致，所以小心坑。&lt;/p&gt; &lt;h3 id=&quot;section-2&quot;&gt;3、 根据帮助文档解压备份文件&lt;/h3&gt; &lt;p&gt;文档中给出的命令是这个&lt;/p&gt; &lt;p&gt;&lt;code&gt;sh rds_backup_extract -f /home/mysql/backup/hins575175_xtra_20150429091224.tar.gz -C /home/mysql/data &lt;/code&gt;&lt;/p&gt; &lt;p&gt;实际操作时，可能环境不同，操作的命令和方式不同。我实际操作的命令是&lt;/p&gt; &lt;p&gt;&lt;code&gt; sh rds_backup_extract.sh -f /alidata/www/databases_backups/hins651261_xtra_20150814021723.tar.gz -C /alidata/www/databases_backups/20150814 &lt;/code&gt;&lt;/p&gt; &lt;h3 id=&quot;section-3&quot;&gt;4、还原备份文件&lt;/h3&gt; &lt;p&gt;心酸的要来了，文中提到的一个还原命令&lt;/p&gt; &lt;p&gt;&lt;code&gt;innobackupex --defaults-file=/home/mysql/data/backup-my.cnf --apply-log /home/mysql/data &lt;/code&gt;&lt;/p&gt; &lt;p&gt;却让我摸不着头脑啊。我执行了命令，一直报错：&lt;/p&gt; &lt;p&gt;[vagrant@localhost ~]$ sudo innobackupex –defaults-file=/alidata/www/databases_backups/20150814/backup-my.cnf –apply-log /alidata/www/databases_backups/20150814/&lt;/p&gt; &lt;p&gt;InnoDB Backup Utility v1.5.1-xtrabackup; Copyright 2003, 2009 Innobase Oy and Percona...</description>
+        <pubDate>Wed, 12 Aug 2015 00:00:00 +0800</pubDate>
+        <link>/Percona-XtraBackup/</link>
+        <guid isPermaLink="true">/Percona-XtraBackup/</guid>
+        
+        <category>RDS</category>
+        
+        <category>Percona XtraBackup</category>
+        
+        
+        <category>percona xtrabackup</category>
+        
+      </item>
+    
+  </channel>
+</rss>

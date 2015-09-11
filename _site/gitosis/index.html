@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>安装Git服务&使用Gitosis管理成员、项目并做项目授权</title>
+    <meta name="description" content="这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖">
+
+    <!-- Google Authorship Markup -->
+    <link rel="author" href="https://plus.google.com/+?rel=author">
+
+    <!-- Social: Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@bravecheng">
+    <meta name="twitter:title" content="安装Git服务&使用Gitosis管理成员、项目并做项目授权">
+    <meta name="twitter:description" content="这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖">
+    
+    <meta property="twitter:image:src" content="/assets/img/">
+    
+
+    <!-- Social: Facebook / Open Graph -->
+    <meta property="og:url" content="/gitosis/">
+    <meta property="og:title" content="安装Git服务&使用Gitosis管理成员、项目并做项目授权">
+    
+    <meta property="og:image" content="/assets/img/">
+    
+    <meta property="og:description" content="这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖">
+    <meta property="og:site_name" content="">
+
+    <!-- Social: Google+ / Schema.org  -->
+    <meta itemprop="name" content="安装Git服务&使用Gitosis管理成员、项目并做项目授权"/>
+    <meta itemprop="description" content="这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖">
+    <meta itemprop="image" content="/assets/img/blog-image.png"/>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/assets/img/icons/favicon.ico" type="image/x-icon" />
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/assets/img/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/icons/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/icons/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/icons/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/icons/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/icons/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/icons/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/icons/apple-touch-icon-152x152.png" />
+    <!-- Windows 8 Tile Icons -->
+    <meta name="application-name" content="程会勇 Blog">
+    <meta name="msapplication-TileColor" content="#0562DC">
+    <meta name="msapplication-square70x70logo" content="smalltile.png" />
+    <meta name="msapplication-square150x150logo" content="mediumtile.png" />
+    <meta name="msapplication-wide310x150logo" content="widetile.png" />
+    <meta name="msapplication-square310x310logo" content="largetile.png" />
+    <!-- Android Lolipop Theme Color -->
+    <meta name="theme-color" content="#0562DC">
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="/gitosis/">
+    <link rel="alternate" type="application/rss+xml" title="" href="/feed.xml" />
+</head>
+
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" display="none" version="1.1"><defs><symbol id="icon-menu" viewBox="0 0 1024 1024"><path class="path1" d="M128 213.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5zM128 725.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5zM128 469.333h768q17.667 0 30.167 12.5t12.5 30.167-12.5 30.167-30.167 12.5h-768q-17.667 0-30.167-12.5t-12.5-30.167 12.5-30.167 30.167-12.5z"/></symbol><symbol id="icon-search" viewBox="0 0 951 1024"><path class="path1" d="M658.286 475.429q0-105.714-75.143-180.857t-180.857-75.143-180.857 75.143-75.143 180.857 75.143 180.857 180.857 75.143 180.857-75.143 75.143-180.857zM950.857 950.857q0 29.714-21.714 51.429t-51.429 21.714q-30.857 0-51.429-21.714l-196-195.429q-102.286 70.857-228 70.857-81.714 0-156.286-31.714t-128.571-85.714-85.714-128.571-31.714-156.286 31.714-156.286 85.714-128.571 128.571-85.714 156.286-31.714 156.286 31.714 128.571 85.714 85.714 128.571 31.714 156.286q0 125.714-70.857 228l196 196q21.143 21.143 21.143 51.429z"/></symbol><symbol id="icon-email" viewBox="0 0 1024 1024"><path class="path1" d="M950.857 859.429v-438.857q-18.286 20.571-39.429 37.714-153.143 117.714-243.429 193.143-29.143 24.571-47.429 38.286t-49.429 27.714-58.571 14h-1.143q-27.429 0-58.571-14t-49.429-27.714-47.429-38.286q-90.286-75.429-243.429-193.143-21.143-17.143-39.429-37.714v438.857q0 7.429 5.429 12.857t12.857 5.429h841.143q7.429 0 12.857-5.429t5.429-12.857zM950.857 258.857v-14t-0.286-7.429-1.714-7.143-3.143-5.143-5.143-4.286-8-1.429h-841.143q-7.429 0-12.857 5.429t-5.429 12.857q0 96 84 162.286 110.286 86.857 229.143 181.143 3.429 2.857 20 16.857t26.286 21.429 25.429 18 28.857 15.714 24.571 5.143h1.143q11.429 0 24.571-5.143t28.857-15.714 25.429-18 26.286-21.429 20-16.857q118.857-94.286 229.143-181.143 30.857-24.571 57.429-66t26.571-75.143zM1024 237.714v621.714q0 37.714-26.857 64.571t-64.571 26.857h-841.143q-37.714 0-64.571-26.857t-26.857-64.571v-621.714q0-37.714 26.857-64.571t64.571-26.857h841.143q37.714 0 64.571 26.857t26.857 64.571z"/></symbol><symbol id="icon-close" viewBox="0 0 805 1024"><path class="path1" d="M741.714 755.429q0 22.857-16 38.857l-77.714 77.714q-16 16-38.857 16t-38.857-16l-168-168-168 168q-16 16-38.857 16t-38.857-16l-77.714-77.714q-16-16-16-38.857t16-38.857l168-168-168-168q-16-16-16-38.857t16-38.857l77.714-77.714q16-16 38.857-16t38.857 16l168 168 168-168q16-16 38.857-16t38.857 16l77.714 77.714q16 16 16 38.857t-16 38.857l-168 168 168 168q16 16 16 38.857z"/></symbol><symbol id="icon-twitter" viewBox="0 0 951 1024"><path class="path1" d="M925.714 233.143q-38.286 56-92.571 95.429 0.571 8 0.571 24 0 74.286-21.714 148.286t-66 142-105.429 120.286-147.429 83.429-184.571 31.143q-154.857 0-283.429-82.857 20 2.286 44.571 2.286 128.571 0 229.143-78.857-60-1.143-107.429-36.857t-65.143-91.143q18.857 2.857 34.857 2.857 24.571 0 48.571-6.286-64-13.143-106-63.714t-42-117.429v-2.286q38.857 21.714 83.429 23.429-37.714-25.143-60-65.714t-22.286-88q0-50.286 25.143-93.143 69.143 85.143 168.286 136.286t212.286 56.857q-4.571-21.714-4.571-42.286 0-76.571 54-130.571t130.571-54q80 0 134.857 58.286 62.286-12 117.143-44.571-21.143 65.714-81.143 101.714 53.143-5.714 106.286-28.571z"/></symbol><symbol id="icon-facebook" viewBox="0 0 585 1024"><path class="path1" d="M548 6.857v150.857h-89.714q-49.143 0-66.286 20.571t-17.143 61.714v108h167.429l-22.286 169.143h-145.143v433.714h-174.857v-433.714h-145.714v-169.143h145.714v-124.571q0-106.286 59.429-164.857t158.286-58.571q84 0 130.286 6.857z"/></symbol><symbol id="icon-rss" viewBox="0 0 805 1024"><path class="path1" d="M219.429 768q0 45.714-32 77.714t-77.714 32-77.714-32-32-77.714 32-77.714 77.714-32 77.714 32 32 77.714zM512 838.286q1.143 16-9.714 27.429-10.286 12-26.857 12h-77.143q-14.286 0-24.571-9.429t-11.429-23.714q-12.571-130.857-105.429-223.714t-223.714-105.429q-14.286-1.143-23.714-11.429t-9.429-24.571v-77.143q0-16.571 12-26.857 9.714-9.714 24.571-9.714h2.857q91.429 7.429 174.857 46t148 103.714q65.143 64.571 103.714 148t46 174.857zM804.571 839.429q1.143 15.429-10.286 26.857-10.286 11.429-26.286 11.429h-81.714q-14.857 0-25.429-10t-11.143-24.286q-6.857-122.857-57.714-233.429t-132.286-192-192-132.286-233.429-58.286q-14.286-0.571-24.286-11.143t-10-24.857v-81.714q0-16 11.429-26.286 10.286-10.286 25.143-10.286h1.714q149.714 7.429 286.571 68.571t243.143 168q106.857 106.286 168 243.143t68.571 286.571z"/></symbol><symbol id="icon-google-plus" viewBox="0 0 951 1024"><path class="path1" d="M420 454.857q0 20.571 18.286 40.286t44.286 38.857 51.714 42 44 59.429 18.286 81.143q0 51.429-27.429 98.857-41.143 69.714-120.571 102.571t-170.286 32.857q-75.429 0-140.857-23.714t-98-78.571q-21.143-34.286-21.143-74.857 0-46.286 25.429-85.714t67.714-65.714q74.857-46.857 230.857-57.143-18.286-24-27.143-42.286t-8.857-41.714q0-20.571 12-48.571-26.286 2.286-38.857 2.286-84.571 0-142.571-55.143t-58-139.714q0-46.857 20.571-90.857t56.571-74.857q44-37.714 104.286-56t124.286-18.286h238.857l-78.857 50.286h-74.857q42.286 36 64 76t21.714 91.429q0 41.143-14 74t-33.714 53.143-39.714 37.143-34 35.143-14 37.714zM336.571 400q21.714 0 44.571-9.429t37.714-24.857q30.286-32.571 30.286-90.857 0-33.143-9.714-71.429t-27.714-74-48.286-59.143-66.857-23.429q-24 0-47.143 11.143t-37.429 30q-26.857 33.714-26.857 91.429 0 26.286 5.714 55.714t18 58.857 29.714 52.857 42.857 38.286 55.143 14.857zM337.714 898.857q33.143 0 63.714-7.429t56.571-22.286 41.714-41.714 15.714-62.286q0-14.286-4-28t-8.286-24-15.429-23.714-16.857-20-22-19.714-20.857-16.571-23.714-17.143-20.857-14.857q-9.143-1.143-27.429-1.143-30.286 0-60 4t-61.429 14.286-55.429 26.286-39.143 42.571-15.429 60.286q0 40 20 70.571t52.286 47.429 68 25.143 72.857 8.286zM800.571 398.286h121.714v61.714h-121.714v125.143h-60v-125.143h-121.143v-61.714h121.143v-124h60v124z"/></symbol><symbol id="icon-angle-down" viewBox="0 0 658 1024"><path class="path1" d="M614.286 420.571q0 7.429-5.714 13.143l-266.286 266.286q-5.714 5.714-13.143 5.714t-13.143-5.714l-266.286-266.286q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714 13.143-5.714t13.143 5.714l224.571 224.571 224.571-224.571q5.714-5.714 13.143-5.714t13.143 5.714l28.571 28.571q5.714 5.714 5.714 13.143z"/></symbol><symbol id="icon-github-alt" viewBox="0 0 951 1024"><path class="path1" d="M365.714 694.857q0 22.857-7.143 46.857t-24.571 43.429-41.429 19.429-41.429-19.429-24.571-43.429-7.143-46.857 7.143-46.857 24.571-43.429 41.429-19.429 41.429 19.429 24.571 43.429 7.143 46.857zM731.429 694.857q0 22.857-7.143 46.857t-24.571 43.429-41.429 19.429-41.429-19.429-24.571-43.429-7.143-46.857 7.143-46.857 24.571-43.429 41.429-19.429 41.429 19.429 24.571 43.429 7.143 46.857zM822.857 694.857q0-68.571-39.429-116.571t-106.857-48q-23.429 0-111.429 12-40.571 6.286-89.714 6.286t-89.714-6.286q-86.857-12-111.429-12-67.429 0-106.857 48t-39.429 116.571q0 50.286 18.286 87.714t46.286 58.857 69.714 34.286 80 16.857 85.143 4h96q46.857 0 85.143-4t80-16.857 69.714-34.286 46.286-58.857 18.286-87.714zM950.857 594.286q0 118.286-34.857 189.143-21.714 44-60.286 76t-80.571 49.143-97.143 27.143-98 12.571-95.429 2.571q-44.571 0-81.143-1.714t-84.286-7.143-87.143-17.143-78.286-29.429-69.143-46.286-49.143-65.714q-35.429-70.286-35.429-189.143 0-135.429 77.714-226.286-15.429-46.857-15.429-97.143 0-66.286 29.143-124.571 61.714 0 108.571 22.571t108 70.571q84-20 176.571-20 84.571 0 160 18.286 60-46.857 106.857-69.143t108-22.286q29.143 58.286 29.143 124.571 0 49.714-15.429 96 77.714 91.429 77.714 227.429z"/></symbol></defs></svg>
+
+        <header class="header-post" role="banner">
+    <div class="content">
+        
+            <time itemprop="datePublished" datetime="2015-08-25 00:00:00 +0800" class="date">25 Aug 2015</time>
+        
+        <h1 class="post-title" itemprop="name">安装Git服务&使用Gitosis管理成员、项目并做项目授权</h1>
+        <p itemprop="description" class="subtitle">这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖</p>
+    </div>
+     <a class="down" data-scroll href="#scroll"><svg class="icon icon-angle-down"><use xlink:href="#icon-angle-down"></use></svg></a>
+     <div class="search-wrapper">
+    <div class="search-form">
+        <input type="text" class="search-field" placeholder="Search...">
+        <svg class="icon-remove-sign"><use xlink:href="#icon-close"></use></svg>
+        <ul class="search-results search-list"></ul>
+    </div>
+</div>
+
+<div id="fade" class="overlay"></div>
+<a id="slide" class="slideButton fade">
+    <svg id="open" class="icon-menu"><use xlink:href="#icon-menu"></use></svg>
+    <svg id="close" class="icon-menu"><use xlink:href="#icon-close"></use></svg>
+</a>
+<aside id="sidebar">
+<nav id="navigation">
+  <h2>MENU</h2>
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/series">Series</a></li>
+    
+      <li><a href="/tags">Tags</a></li>
+    
+      <li><a href="/about">About Me</a></li>
+    
+    <li><a class="feed" href="/feed.xml" title="Atom/RSS feed">Feed</a></li>
+  </ul>
+</nav>
+</aside>
+<a id="search" class="dosearch">
+    <svg class="icon-menu icon-search"><use xlink:href="#icon-search"></use></svg>
+</a>
+</header>
+
+        <section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+            <article role="article" id="scroll" class="post-content" itemprop="articleBody">
+                <blockquote>
+  <p>这是一篇实际的操作文档，里面的大部分图都是自己亲手截屏，力求达到真实并希望帮助到更多的遇到类似问题的困惑者。如果遇到问题，可以直接在文章最下面联系到我，也欢迎拍砖。</p>
+</blockquote>
+
+<h1 id="section">弄清楚关键词眼与概念</h1>
+
+<p><strong><em>裸仓库（bare repository）</em></strong></p>
+
+<blockquote>
+  <p>即一个没有当前工作目录的仓库。因为该仓库只是一个合作媒介，所以不需要从硬盘上取出最新版本的快照；仓库里存放的仅仅是 Git 的数据。简单地说，裸仓库就是你工作目录中 .git 子目录内的内容。</p>
+</blockquote>
+
+<p>补充一下：直接上图，简单明了。</p>
+
+<p><img src="/assets/img/gitosis/裸仓库.png" alt="Alt text" /></p>
+
+<p><strong><em>远程仓库</em></strong></p>
+
+<blockquote>
+  <p>远程仓库通常只是一个裸仓库（bare repository） </p>
+</blockquote>
+
+<p><img src="/assets/img/gitosis/本地目录与仓库-2.png" alt="Alt text" /></p>
+
+<p><img src="/assets/img/gitosis/暂存区原理.png" alt="Alt text" /></p>
+
+<p>在 Git 内都只有三种状态：已提交（committed），已修改（modified）和已暂存（staged）。已提交表示该文件已经被安全地保存在本地仓库了；已修改表示修改了某个文件，但还没有提交保存；已暂存表示把已修改的文件放在下次提交时要保存的清单中。 结合实际的工作项目，来解释下以下概念。</p>
+
+<p><strong><em>Git 工作目录</em></strong></p>
+
+<p>就是下图中的除了.git目录的其他的文件与目录。</p>
+
+<p><strong><em>暂存区域</em></strong></p>
+
+<p>就是实际操作时，使用git add 命令将新增（修改）的文件添加到一个控制区域的清单。</p>
+
+<p><strong>本地仓库</strong></p>
+
+<p>就是下图中的.git目录的其他的文件与目录。</p>
+
+<p><img src="/assets/img/gitosis/本地目录与仓库.png" alt="图三" /> </p>
+
+<h1 id="git">Git安装</h1>
+
+<p>以我的一台CentOS为例，做下实际安装过程。
+<img src="/assets/img/gitosis/本地环境.png" alt="Alt text" /></p>
+
+<p>安装git主要分为两种，一种是通过编译源代码来安装；另一种是使用为特定平台预编译好的安装包。我选择第二种咯。第一种安装方式<a href="http://git.oschina.net/progit/1-%E8%B5%B7%E6%AD%A5.html#1.4-%E5%AE%89%E8%A3%85-Git">参考这里</a></p>
+
+<p><img src="/assets/img/gitosis/特定平台预编译好的安装包.png" alt="Alt text" /></p>
+
+<p><img src="/assets/img/gitosis/安装结束.png" alt="Alt text" /></p>
+
+<h1 id="gitosisgit">Gitosis管理git用户与授权</h1>
+
+<p>如果你的项目是多人开发，建议就使用Gitosis进行人员添加与项目授权。安装Gitosis网上资料比比皆是，我自己也踩过很多坑。但是我建议是先看看网上的资料，最后仔细阅读<a href="https://github.com/res0nat0r/gitosis">gitosis</a>在Github上面的安装流程，下面结合自己的搜索阅读与安装经历，一步一步记录我的安装过程。</p>
+
+<h3 id="gitosis--python--python--setuptools-">1、Gitosis 的工作依赖于某些 Python 工具，所以首先要安装 Python 的 setuptools 包</h3>
+
+<p><img src="/assets/img/gitosis/python-setuptools.png" alt="Alt text" /></p>
+
+<h3 id="gitosis-">2、从 Gitosis 项目主页克隆并安装</h3>
+
+<p>有可能你clone不成功，报socket连接失败
+<img src="/assets/img/gitosis/1440148225122.png" alt="Alt text" /></p>
+
+<p>那么，你可以去Github项目主页克隆</p>
+
+<p><img src="/assets/img/gitosis/1440148325972.png" alt="Alt text" /></p>
+
+<p>可是，克隆Github主页也报错，这时需要在你的机器上使用<code>ssh-keygen</code>命令生成公钥与私钥，然后发布到Github上去。</p>
+
+<p><img src="/assets/img/gitosis/1440148460982.png" alt="Alt text" />
+将生成的公钥发布到Github（你得有个Github账号呀）上。
+<img src="/assets/img/gitosis/1440148698397.png" alt="Alt text" />
+添加成功后的效果
+<img src="/assets/img/gitosis/1440148904479.png" alt="Alt text" /></p>
+
+<p>再次克隆没有问题
+<img src="/assets/img/gitosis/1440148967209.png" alt="Alt text" /></p>
+
+<p>安装几个供 Gitosis 使用的工具
+<img src="/assets/img/gitosis/1440149048737.png" alt="Alt text" /></p>
+
+<h3 id="gitosis">3、初始化Gitosis</h3>
+
+<p>创建用于管理我们的Gitosis项目的用户（<a href="https://github.com/res0nat0r/gitosis">Github主页</a>有关于这块的介绍，不同的Linux版本创建用户是不一样的）</p>
+
+<p>切换到ROOT用户，然后添加git用户
+<img src="/assets/img/gitosis/1440149716711.png" alt="Alt text" /></p>
+
+<p>初始化Gitosis。这里需要注意，管理我们的Gitosis项目需要有一个管理员，而这个管理员是需要把自己的SSH公钥发布到这台服务器上的。比如，我把自己的Mac用户的公钥上传到服务器。</p>
+
+<p><img src="/assets/img/gitosis/1440150675005.png" alt="Alt text" /></p>
+
+<p>初始化Gitosis。注意Gitosis项目主页描述的和我们实际执行的有些区别。</p>
+
+<p><img src="/assets/img/gitosis/1440150789113.png" alt="Alt text" /></p>
+
+<p>初始化成功后，就可以安装管理我们的项目咯。比如，我用Mac用户先克隆Gitosis项目</p>
+
+<p><img src="/assets/img/gitosis/1440151155774.png" alt="Alt text" /></p>
+
+<p>这就是Gitosis的项目管理员：chenghuiyong
+<img src="/assets/img/gitosis/1440151226269.png" alt="Alt text" /></p>
+
+<h3 id="gitosis-1">4、配置Gitosis</h3>
+
+<p>我们继续增加一个项目，成员还是我自己，允许读写。</p>
+
+<p><img src="/assets/img/gitosis/1440154341290.png" alt="Alt text" /></p>
+
+<p>推送到远程仓库中。</p>
+
+<p><img src="/assets/img/gitosis/1440154441367.png" alt="Alt text" /></p>
+
+<p>配置文件中，我们已经新增了一个项目：api.chehubao.com，现在需要做是在本地创建一个api.chehubao.com目录，初始化该项目，然后与远程仓库关联，在推送到远程（这里推送时要注意，本地仓库里面一定要有内容才能推送成功 ，而<a href="http://git.oschina.net/progit/4-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git.html#4.7-Gitosis">Pro Git</a> 这本书里面是错误的）</p>
+
+<p><img src="/assets/img/gitosis/1440154725633.png" alt="Alt text" /></p>
+
+<p>推送到远程仓库，如果远程没有它默认会自动创建该仓库。
+<img src="/assets/img/gitosis/1440154773210.png" alt="Alt text" /></p>
+
+<p>登陆到服务器，查看是否创建了该项目</p>
+
+<p><img src="/assets/img/gitosis/1440154839318.png" alt="Alt text" /></p>
+
+<p>至此，Git服务器搭建与项目、权限、用户管理已经结束。在写这篇文章前，我自己是查了很多资料，实践了多次，也遇到了非常多的困难。网上的资料总是不完整的，最后对比了不同的资料与官方的文档，总结了这篇博文。</p>
+
+<p>我们现在公司的项目也全部基于Git，使用Gitosis授权。同时，我们也不断在积累Git-Flow的经验心得，接下来，我会根据实际项目的操作经验，分享一篇关于如何高效的在团队中使用Git-Flow流程进行项目开发的博文，如果你喜欢请在我的博客中关注我：<a href="www.chenghuiyong.com">www.chenghuiyong.com</a></p>
+
+<h3 id="section-1">2015-8-25更新</h3>
+
+<p>如果需要重新配置Gitosis的话，过程中，可能会报错：</p>
+
+<p><img src="/assets/img/gitosis/1440493158186.png" alt="Alt text" /></p>
+
+<p>这个原因，是因为你第一次配置Gitosis的用户的公钥（id_rsa.pub）内容错误导致。</p>
+
+<p>只要按照我上面的操作配置后，可以正常克隆，无需密码</p>
+
+<p><img src="/assets/img/gitosis/1440493279065.png" alt="Alt text" /></p>
+
+<h1 id="section-2">参考资源</h1>
+
+<ul>
+  <li><a href="http://git.oschina.net/progit/4-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git.html">Pro Git（中文版）</a></li>
+  <li><a href="https://github.com/res0nat0r/gitosis">https://github.com/res0nat0r/gitosis</a></li>
+  <li><a href="http://stackoverflow.com/questions/4882545/gitosis-asking-for-password">gitosis asking for password</a></li>
+  <li><a href="http://stackoverflow.com/questions/25115959/gitosis-init-error-traceback-most-recent-call-last">gitosis-init error Traceback </a></li>
+</ul>
+
+            </article>
+
+            <section class="share">
+    <h3>Share</h3>
+    <a aria-label="Share on Twitter" href="https://twitter.com/intent/tweet?text=&quot;安装Git服务&使用Gitosis管理成员、项目并做项目授权&quot;%20/gitosis/%20via%20&#64;bravecheng&hashtags=Git,Gitosis,"
+    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title="Share on Twitter">
+        <svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg>
+    </a>
+    <a aria-label="Share on Facebook"href="https://www.facebook.com/sharer/sharer.php?u=/gitosis/"
+    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title="Share on Facebook">
+        <svg class="icon icon-facebook"><use xlink:href="#icon-facebook"></use></svg>
+    </a>
+    <a aria-label="Share on Google Plus" href="https://plus.google.com/share?url=/gitosis/"
+    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title="Share on Google+">
+        <svg class="icon icon-google-plus"><use xlink:href="#icon-google-plus"></use></svg>
+    </a>
+</section>
+            <section class="author" itemprop="author">
+    <div class="details" itemscope itemtype="http://schema.org/Person">
+        <img itemprop="image" class="img-rounded" src="/assets/img/blog-author.jpg" alt="">
+        <p class="def">Author</p>
+        <h3 class="name">
+            <a itemprop="name" href="https://plus.google.com/+/posts">程会勇</a>
+        </h3>
+        <p class="desc">程会勇的个人博客，专注互联网工具，产品</p>
+        <a itemprop="email" class="email" href="mailto:chenghuiyong1987@gmail.com">chenghuiyong1987@gmail.com</a>
+    </div>
+</section>
+
+            <section class="comments">
+    <h3>Comments</h3>
+    <div id="disqus_thread"></div>
+</section>
+<script type="text/javascript">
+    var disqus_loaded = false;
+
+    function load_disqus()
+    {
+        disqus_loaded = true;
+        var disqus_shortname = '';
+        var disqus_title = '安装Git服务&使用Gitosis管理成员、项目并做项目授权';
+        var disqus_url = '/gitosis/';
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        var ldr = document.getElementById('disqus_loader');
+    };
+    window.onscroll = function(e) {
+        if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 800)) {
+            //hit bottom of page
+            if (disqus_loaded==false)
+                load_disqus()
+        }
+    };
+</script>
+            <footer>
+    <p>by <a href="http://chenghuiyong.com">Brave Cheng</a></p>
+</footer>
+<script src="/assets/js/main.js"></script>
+        </section>
+    </body>
+</html>

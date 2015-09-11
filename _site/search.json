@@ -1,0 +1,27 @@
+[
+  
+    {
+      "title"    : "CentOS配置Memcache应用层缓存",
+      "category" : "memcache",
+      "tags"     : "CentOS, Memcache, and 应用缓存",
+      "url"      : "/Centos-memcache/",
+      "date"     : "11 Sep 2015"
+    } ,
+  
+    {
+      "title"    : "安装Git服务&amp;使用Gitosis管理成员、项目并做项目授权",
+      "category" : "gitosis",
+      "tags"     : "Git and Gitosis",
+      "url"      : "/gitosis/",
+      "date"     : "25 Aug 2015"
+    } ,
+  
+    {
+      "title"    : "阿里云RDS 数据库恢复工具Percona XtraBackup 实战心得(都是心酸血泪啊)",
+      "category" : "percona xtrabackup",
+      "tags"     : "RDS and Percona XtraBackup",
+      "url"      : "/Percona-XtraBackup/",
+      "date"     : "12 Aug 2015"
+    } 
+  
+]
